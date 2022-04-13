@@ -1,6 +1,7 @@
 package process
 
 import (
+	"fmt"
 	"io"
 	"log"
 
@@ -21,22 +22,12 @@ func Process(reader io.Reader, throttling Throttling, bandWidthInBytes common.By
 		bufferSize = int(bandWidthInBytes)
 	}
 
-	log.Printf(
-		"[Process] reader: %v, throttling: %v, bandW: %d, bufferSize: %d",
-		reader, throttling, bandWidthInBytes, bufferSize,
-	)
-
 	hash := make([]byte, hashing.HashBufferSize)
 	buffer := make([]byte, bufferSize)
 	totalBytesProcessed := uint64(0)
 
 	for {
 		bytesRead, err := reader.Read(buffer)
-
-		log.Printf(
-			"[Process] err: %v, bytesRead: %d, hash: %v, buffer: (%d bytes) %v",
-			err, bytesRead, hash, len(buffer), buffer,
-		)
 
 		if err == io.EOF {
 			break
@@ -55,8 +46,12 @@ func Process(reader io.Reader, throttling Throttling, bandWidthInBytes common.By
 			throttling.Throttle()
 		}
 
-		log.Printf("[Process] Processing, %d bytes", totalBytesProcessed)
+		// sending debug data to console to a single line
+		fmt.Printf("[Process] Processed %d bytes             \r", totalBytesProcessed)
 	}
+
+	// moving to next line since \r (above) positions cursor in begining of an laready written line
+	fmt.Println()
 
 	log.Printf("[Process] Finish process, %d bytes read", totalBytesProcessed)
 	return hash, nil

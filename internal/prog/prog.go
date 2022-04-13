@@ -32,7 +32,7 @@ func Run(options args.Options) error {
 	defer file.Close()
 
 	hash, err := process.Process(
-		file, &WaitOneSecondThrottle{}, options.BandWithInBytesPerSec(),
+		reader, &WaitOneSecondThrottle{}, options.BandWithInBytesPerSec(),
 	)
 
 	hashHexString := hex.EncodeToString(hash)
