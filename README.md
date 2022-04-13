@@ -35,6 +35,8 @@
 >
 > Then, when converted to hexadecimal for writing to the output file, it should be:
 > `186c5acc51bd667e`
+>
+> Do not put the file in memory or disk, assume it may be bigger than available resources.
 
 ## How to test
 
